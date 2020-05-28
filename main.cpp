@@ -1,13 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <list>
+#include "functions.cpp"
 
 using namespace std;
-
-struct Data {
-    string addr;   
-    string value;
-};
 
 int main()
 {
@@ -35,7 +31,7 @@ int main()
         string addr, value;
         addr.assign(fileLine, 0,2); //vai pegar a string da posicao inicial ate o tamanho definido;
         value.assign(fileLine, 3,2); //vai pegar a partir da posicao 3 de tamanho 2;
-        memory.push_back({addr, value});
+        memory.push_back({sHexToDec(addr), sHexToDec(value), false});
     }
 
     for(auto i : memory){
