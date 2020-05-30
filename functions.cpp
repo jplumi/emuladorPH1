@@ -3,16 +3,7 @@
 
 using namespace std;
 
-
-struct Data {
-    int addr;   
-    int value;
-    bool modified;
-};
-
-/**
- * Traduz o primeiro caractere de uma string em uma instrução
- */
+// Traduz o primeiro caractere de uma string em uma instrução
 // string getInstruction(string value){
 //     char opcode = value[0];
 //     string result;
@@ -55,23 +46,4 @@ struct Data {
 //     }
 //     return result;
 // }
-
-// Transforma uma string que representa um numero hexadecimal em um int decimal
-int sHexToDec(string value){
-    int sum=0;
-    for(int i=0, j=value.length()-1;i<=value.length()-1; i++, j--){
-        string alg;
-        alg.assign(value, i,1);
-        if(alg == "A") alg = "10";
-        else if(alg == "B") alg = "11";
-        else if(alg == "C") alg = "12";
-        else if(alg == "D") alg = "13";
-        else if(alg == "E") alg = "14";
-        else if(alg == "F") alg = "15";
-        
-        int n = pow(16, j), algInt = stoi(alg);
-        sum += algInt * n;
-    }
-    return sum;
-}
 
