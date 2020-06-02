@@ -64,6 +64,7 @@ int main()
             pc++;
             int addr = memory[pc];
             ac -= memory[addr];
+            cout << "sub ac: " << ac << endl;
             cout << "SUB " << hex << addr << " ; AC <- AC - MEM[" << hex << addr << "]\n";
             numInstructions++;
             continue;
@@ -114,9 +115,44 @@ int main()
             numInstructions++;
             continue;
         }
-        // if(memory[pc] == 176){ // JMP
-        //     pc++;
-        // }
+        if(memory[pc] == 176){ // JMP
+            pc++;
+            int addr = memory[pc];
+            pc = addr-1;
+            cout << "JMP " << hex << addr << " ; PC <- " << hex << addr << endl;
+            numInstructions++;
+            continue;
+        }
+        if(memory[pc] == 192){ // JEQ
+            pc++;
+            int addr = memory[pc];
+            if(ac == 0){
+                pc = addr-1;
+            }
+            cout << "JEQ " << hex << addr << " ; Se AC==0 então PC <- " << hex << addr << endl;
+            numInstructions++;
+            continue;
+        }
+        if(memory[pc] == 208){ // JG
+            pc++;
+            int addr = memory[pc];
+            if(ac > 0){
+                pc = addr-1;
+            }
+            cout << "JG  " << hex << addr << " ; Se AC>0 então PC <- " << hex << addr << endl;
+            numInstructions++;
+            continue;
+        }
+        if(memory[pc] == 224){ // JL TODO funcao nao ta funcionando
+            pc++;
+            int addr = memory[pc];
+            if(ac < 0){
+                pc = addr-1;
+            }
+            cout << "JL  " << hex << addr << " ; Se AC<0 então PC <- " << hex << addr << endl;
+            numInstructions++;
+            continue;
+        }
         if(memory[pc] == 240){
             pc++;
             cout << "HTL\n";
