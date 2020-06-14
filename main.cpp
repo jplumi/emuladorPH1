@@ -1,14 +1,16 @@
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include "functions.cpp"
 
 using namespace std;
 
-int main()
+int main()  
 {
 
-   ifstream file;
+    ifstream file;
     int memory[256]; // dados de memória do PH1
+    int valmod[256], posmod[256]; //faz uma copia dos valores p memory
     string fileName, line;
     
     cout << "Input file: ";
@@ -21,7 +23,6 @@ int main()
         return 1;
     }
 
-    // file = fopen("example.txt", "r");
     int addr, value;
     while(file >> hex >> addr){
         file >> hex >> value;
@@ -30,8 +31,8 @@ int main()
     file.close();
 
     addr=0;
-    int pc, ac=0, numInstructions=0;
-    bool verifica = false;
+    int pc, ac=0, numInstructions=0, i = 0;
+    bool verifica = false, modificou = false;
     for(pc=0; pc<255; pc++){
 
         switch (memory[pc])
@@ -45,9 +46,14 @@ int main()
                 break;
             
             case 32: //str
+                i++;
+                modificou = true;
                 pc++;
                 addr = memory[pc];
+                posmod[i] = addr;
                 memory[addr] = ac;
+                valmod[addr] = ac;
+                cout << "Testando valmod: " << posmod[i] << " " << setfill('0') << setw(2) << valmod[addr] << endl;
                 cout << "STR " << hex << addr << " ; MEM[" << addr << "] <- AC\n";
                 numInstructions++;
                 break;
@@ -170,10 +176,26 @@ int main()
     cout << endl << numInstructions << " instructions executed\n\n";
 
     cout << "Registers:\n"
-        << "AC " << hex << ac << endl
-        << "PC " << hex <<  pc << endl;
-
-    // cout << "MEMORY: " << memory[128] << endl;
+         << "AC " << hex << setfill('0') << setw(2) << ac << endl
+         << "PC " << hex << setfill('0') << setw(2) << pc << endl;
+    
+    
+    if(modificou)
+    {
+        cout << "MEMORY: " << endl;
+        //nao ta entrando no for
+        for(i = 0; i > 255; i++)
+        {   
+            cout << "entrou no for" << endl;
+            addr = memory[i];
+            cout << posmod[i] << "" << valmod[addr] << endl;
+        }
+    }    
+    else
+    {
+        cout << "MEMORY : Não foi modificado" << endl;
+    } 
+    
 
     return 0;
 }
