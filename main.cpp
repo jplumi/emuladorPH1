@@ -35,6 +35,11 @@ int main()
     for(pc=0; pc<255; pc++){
 
         switch (memory[pc]){
+            case  0: // NOP
+                cout << "NOP\n";
+                numInstructions++;
+                break;
+
             case 16: // LDR
                 pc++;
                 addr = memory[pc];
@@ -171,16 +176,14 @@ int main()
     cout << "AC " << setw(2) << setfill('0') << hex << ac << endl;
     cout << "PC " << setw(2) << setfill('0') << hex << pc << endl; 
 
+    cout << "\nMemory:\n";
     if(!modaddr.empty()){
-        cout << "\nMemory:\n";
         for(int i : modaddr){
             cout << i << " " << setw(2) << setfill('0') << memory[i] << endl;
         }
     }
-    else
-    {
-        cout << "\nMemory:\n";
-        cout << "Não sofreu modificações" << endl;
+    else{
+        cout << "No changes\n";
     }
 
     return 0;
