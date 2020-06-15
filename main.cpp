@@ -2,7 +2,6 @@
 #include <fstream>
 #include <iomanip>
 #include <list>
-#include "functions.cpp"
 
 using namespace std;
 
@@ -10,7 +9,7 @@ int main()
 {
     ifstream file;
     int memory[256]; // dados de memória do PH1
-    list<int> mutaddr; // lista para identificar dados da memory modificados
+    list<int> modaddr; // lista para identificar dados da memory modificados
     string fileName, line;
     
     cout << "Input file: ";
@@ -19,7 +18,7 @@ int main()
 
     file.open(fileName);
     if(!file){
-        cout << "ERROR: File not found\n";
+        cout << "ERROR: File not found!!\n";
         return 1;
     }
 
@@ -32,7 +31,7 @@ int main()
 
     addr=0;
     int pc, ac=0, numInstructions=0;
-    bool htl = false;
+    bool hlt = false;
     for(pc=0; pc<255; pc++){
 
         switch (memory[pc]){
@@ -49,7 +48,7 @@ int main()
                 addr = memory[pc];
                 memory[addr] = ac;
                 cout << "STR " << setw(2) << setfill('0') << hex << addr << " ; MEM[" << setw(2) << setfill('0') << hex << addr << "] <- AC\n";
-                mutaddr.push_back(addr);
+                modaddr.push_back(addr);
                 numInstructions++;
                 break;
             
@@ -157,11 +156,11 @@ int main()
                 pc++;
                 cout << "HLT\n";
                 numInstructions++;
-                htl = true;
+                hlt = true;
                 break; 
         }
 
-        if(htl){
+        if(hlt){
             break;
         }
     }
@@ -172,11 +171,16 @@ int main()
     cout << "AC " << setw(2) << setfill('0') << hex << ac << endl;
     cout << "PC " << setw(2) << setfill('0') << hex << pc << endl; 
 
-    if(!mutaddr.empty()){
+    if(!modaddr.empty()){
         cout << "\nMemory:\n";
-        for(int i : mutaddr){
+        for(int i : modaddr){
             cout << i << " " << setw(2) << setfill('0') << memory[i] << endl;
         }
+    }
+    else
+    {
+        cout << "\nMemory:\n";
+        cout << "Não sofreu modificações" << endl;
     }
 
     return 0;
