@@ -1,16 +1,16 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <list>
 #include "functions.cpp"
 
 using namespace std;
 
-int main()  
+int main()
 {
-
     ifstream file;
     int memory[256]; // dados de memória do PH1
-    int valmod[256], posmod[256]; //faz uma copia dos valores p memory
+    list<int> mutaddr; // lista para identificar dados da memory modificados
     string fileName, line;
     
     cout << "Input file: ";
@@ -31,171 +31,153 @@ int main()
     file.close();
 
     addr=0;
-    int pc, ac=0, numInstructions=0, i = 0;
-    bool verifica = false, modificou = false;
+    int pc, ac=0, numInstructions=0;
+    bool htl = false;
     for(pc=0; pc<255; pc++){
 
-        switch (memory[pc])
-        {
-            case 16: //ldr
+        switch (memory[pc]){
+            case 16: // LDR
                 pc++;
                 addr = memory[pc];
                 ac = memory[addr];
-                cout << "LDR " << hex << addr << " ; AC <- MEM[" << hex << addr << "]\n";
+                cout << "LDR " << setw(2) << setfill('0') << hex << addr << " ; AC <- MEM[" << setw(2) << setfill('0') << hex << addr << "]\n";
                 numInstructions++;
                 break;
             
-            case 32: //str
-                i++;
-                modificou = true;
+            case 32: // STR
                 pc++;
                 addr = memory[pc];
-                posmod[i] = addr;
                 memory[addr] = ac;
-                valmod[addr] = ac;
-                cout << "Testando valmod: " << posmod[i] << " " << setfill('0') << setw(2) << valmod[addr] << endl;
-                cout << "STR " << hex << addr << " ; MEM[" << addr << "] <- AC\n";
+                cout << "STR " << setw(2) << setfill('0') << hex << addr << " ; MEM[" << setw(2) << setfill('0') << hex << addr << "] <- AC\n";
+                mutaddr.push_back(addr);
                 numInstructions++;
                 break;
             
-            case 48: //add
+            case 48: // ADD
                 pc++;
                 addr = memory[pc];
                 ac += memory[addr];
-                cout << "ADD " << hex << addr << " ; AC <- AC + MEM[" << hex << addr << "]\n";
+                cout << "ADD " << setw(2) << setfill('0') << hex << addr << " ; AC <- AC + MEM[" << setw(2) << setfill('0') << hex << addr << "]\n";
                 numInstructions++;
                 break;
             
-            case 64: //sub
+            case 64: // SUB
                 pc++;
                 addr = memory[pc];
                 ac -= memory[addr];
-                cout << "sub ac: " << ac << endl;
-                cout << "SUB " << hex << addr << " ; AC <- AC - MEM[" << hex << addr << "]\n";
+                cout << "SUB " << setw(2) << setfill('0') << hex << addr << " ; AC <- AC - MEM[" << setw(2) << setfill('0') << hex << addr << "]\n";
                 numInstructions++;
                 break;
 
-            case 80: //mul
+            case 80: // MUL
                 pc++;
                 addr = memory[pc];
                 ac *= memory[addr];
-                cout << "MUL " << hex << addr << " ; AC <- AC * MEM[" << hex << addr << "]\n";
+                cout << "MUL " << setw(2) << setfill('0') << hex << addr << " ; AC <- AC * MEM[" << setw(2) << setfill('0') << hex << addr << "]\n";
                 numInstructions++;
                 break;
             
-            case 96: //div
+            case 96: // DIV
                 pc++;
                 addr = memory[pc];
                 ac /= memory[addr];
-                cout << "DIV " << hex << addr << " ; AC <- AC / MEM[" << hex << addr << "]\n";
+                cout << "DIV " << setw(2) << setfill('0') << hex << addr << " ; AC <- AC / MEM[" << setw(2) << setfill('0') << hex << addr << "]\n";
                 numInstructions++;
                 break;
 
-            case 112: //not
+            case 112: // NOT
                 ac = ~ac;
                 cout << "NOT    ; AC <- !AC\n";
                 numInstructions++;
                 break;
             
-            case 128: //and
+            case 128: // AND
                 pc++;
                 addr = memory[pc];
                 ac = ac & memory[addr];
-                cout << "AND " << hex << addr << " ; AC <- AC & MEM[" << hex << addr << "]\n";
+                cout << "AND " << setw(2) << setfill('0') << hex << addr << " ; AC <- AC & MEM[" << setw(2) << setfill('0') << hex << addr << "]\n";
                 numInstructions++;
                 break;
 
-            case 144: //or
+            case 144: // OR
                 pc++;
                 addr = memory[pc];
                 ac = ac | memory[addr];
-                cout << "OR  " << hex << addr << " ; AC <- AC | MEM[" << hex << addr << "]\n";
+                cout << "OR  " << setw(2) << setfill('0') << hex << addr << " ; AC <- AC | MEM[" << setw(2) << setfill('0') << hex << addr << "]\n";
                 numInstructions++;
                 break;
             
-            case 160: //xor
+            case 160: // XOR
                 pc++;
                 addr = memory[pc];
                 ac = ac ^ memory[addr];
-                cout << "XOR " << hex << addr << " ; AC <- AC ^ MEM[" << hex << addr << "]\n";
+                cout << "XOR " << setw(2) << setfill('0') << hex << addr << " ; AC <- AC ^ MEM[" << setw(2) << setfill('0') << hex << addr << "]\n";
                 numInstructions++;
                 break;
             
-            case 176: //jmp
+            case 176: // JMP
                 pc++;
                 addr = memory[pc];
                 pc = addr-1;
-                cout << "JMP " << hex << addr << " ; PC <- " << hex << addr << endl;
+                cout << "JMP " << setw(2) << setfill('0') << hex << addr << " ; PC <- " << setw(2) << setfill('0') << hex << addr << endl;
                 numInstructions++;
                 break;
 
-            case 192: //jeq
+            case 192: // JEQ
                 pc++;
                 addr = memory[pc];
                 if(ac == 0){
                     pc = addr-1;
                 }
-                cout << "JEQ " << hex << addr << " ; Se AC==0 então PC <- " << hex << addr << endl;
+                cout << "JEQ " << setw(2) << setfill('0') << hex << addr << " ; Se AC==0 então PC <- " << setw(2) << setfill('0') << hex << addr << endl;
                 numInstructions++;
                 break;
 
-            case 208: //jg
+            case 208: // JG
                 pc++;
                 addr = memory[pc];
                 if(ac > 0){
                     pc = addr-1;
                 }
-                cout << "JG  " << hex << addr << " ; Se AC>0 então PC <- " << hex << addr << endl;
+                cout << "JG  " << hex << addr << " ; Se AC>0 então PC <- " << setw(2) << setfill('0') << hex << addr << endl;
                 numInstructions++;
                 break;
 
-            case 224:
+            case 224: // JL
                 pc++;
                 addr = memory[pc];
                 if(ac < 0){
                     pc = addr-1;
                 }
-                cout << "JL  " << hex << addr << " ; Se AC<0 então PC <- " << hex << addr << endl;
+                cout << "JL  " << setw(2) << setfill('0') << hex << addr << " ; Se AC<0 então PC <- " << setw(2) << setfill('0') << hex << addr << endl;
                 numInstructions++;
                 break;
 
-            case 240: //hlt
+            case 240: // HLT
                 pc++;
-                cout << "HTL\n";
+                cout << "HLT\n";
                 numInstructions++;
-                verifica = true;
+                htl = true;
                 break; 
         }
 
-        if(verifica)
-        {
+        if(htl){
             break;
         }
     }
 
     cout << endl << numInstructions << " instructions executed\n\n";
 
-    cout << "Registers:\n"
-         << "AC " << hex << setfill('0') << setw(2) << ac << endl
-         << "PC " << hex << setfill('0') << setw(2) << pc << endl;
-    
-    
-    if(modificou)
-    {
-        cout << "MEMORY: " << endl;
-        //nao ta entrando no for
-        for(i = 0; i > 255; i++)
-        {   
-            cout << "entrou no for" << endl;
-            addr = memory[i];
-            cout << posmod[i] << "" << valmod[addr] << endl;
+    cout << "Registers:\n";
+    cout << "AC " << setw(2) << setfill('0') << hex << ac << endl;
+    cout << "PC " << setw(2) << setfill('0') << hex << pc << endl; 
+
+    if(!mutaddr.empty()){
+        cout << "\nMemory:\n";
+        for(int i : mutaddr){
+            cout << i << " " << memory[i] << endl;
         }
-    }    
-    else
-    {
-        cout << "MEMORY : Não foi modificado" << endl;
-    } 
-    
+    }
 
     return 0;
 }
