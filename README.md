@@ -44,6 +44,7 @@ Prof. Marcos José Brusso
 A primeira coluna representa os endereços de memória e a segunda coluna o valor que o endereço guarda, ambos em hexadecimal.
 
 ```
+// example.txt
 00 10
 01 81
 02 30
@@ -55,12 +56,15 @@ A primeira coluna representa os endereços de memória e a segunda coluna o valo
 81 05
 82 02
 ```
+Ao executar o programa, digitar o nome do arquivo de entrada:
+
+```
+Input file: example.txt
+```
 
 ### Exemplo de saída:
 
 ```
-Input file: example.txt
-
 LDR 81 ; AC <- MEM[81]
 ADD 82 ; AC <- AC + MEM[82]
 STR 80 ; MEM[80] <- AC
