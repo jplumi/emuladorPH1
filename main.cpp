@@ -175,7 +175,7 @@ int main()
     if(!mutaddr.empty()){
         cout << "\nMemory:\n";
         for(int i : mutaddr){
-            cout << i << " " << memory[i] << endl;
+            cout << i << " " << setw(2) << setfill('0') << memory[i] << endl;
         }
     }
 
