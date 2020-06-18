@@ -30,7 +30,8 @@ int main()
     file.close();
 
     addr=0;
-    int pc, ac=0, numInstructions=0;
+    int pc;
+    int ac=0, numInstructions=0;
     bool hlt = false;
     for(pc=0; pc<255; pc++){
 
@@ -162,7 +163,11 @@ int main()
                 cout << "HLT\n";
                 numInstructions++;
                 hlt = true;
-                break; 
+                break;
+            
+            default:
+                cout << "ERROR: " << " failed to identify \'" << memory[pc] << "\' at address " << pc << endl;
+                return 1;
         }
 
         if(hlt){
