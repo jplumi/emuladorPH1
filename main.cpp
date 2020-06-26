@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <list>
+#include <set>
 
 using namespace std;
 
@@ -9,7 +9,7 @@ int main()
 {
     ifstream file;
     int memory[256]; // dados de memória do PH1
-    list<int> modaddr; // lista para identificar dados da memory modificados
+    set<int> modaddr; // lista para identificar dados da memory modificados
     string fileName, line;
     
     cout << "Input file: ";
@@ -30,11 +30,10 @@ int main()
     file.close();
 
     addr=0;
-    int pc;
+    int pc=0;
     int ac=0, numInstructions=0;
     bool hlt = false;
-    for(pc=0; pc<255; pc++){
-
+    while(true){
         switch (memory[pc]){
             case  0: // NOP
                 cout << "NOP\n";
@@ -54,7 +53,7 @@ int main()
                 addr = memory[pc];
                 memory[addr] = ac;
                 cout << "STR " << setw(2) << setfill('0') << hex << addr << " ; MEM[" << setw(2) << setfill('0') << hex << addr << "] <- AC\n";
-                modaddr.push_back(addr);
+                modaddr.insert(addr);
                 numInstructions++;
                 break;
             
@@ -159,7 +158,6 @@ int main()
                 break;
 
             case 240: // HLT
-                pc++;
                 cout << "HLT\n";
                 numInstructions++;
                 hlt = true;
@@ -169,13 +167,13 @@ int main()
                 cout << "ERROR: " << " failed to identify \'" << memory[pc] << "\' at address " << pc << endl;
                 return 1;
         }
-
+        pc++;
         if(hlt){
             break;
         }
     }
 
-    cout << endl << numInstructions << " instructions executed\n\n";
+    cout << endl << dec << numInstructions << " instructions executed\n\n";
 
     cout << "Registers:\n";
     cout << "AC " << setw(2) << setfill('0') << hex << ac << endl;
