@@ -35,12 +35,12 @@ int main()
     bool hlt = false;
     while(true){
         switch (memory[pc]){
-            case  0: // NOP
+            case 0x00: // NOP
                 cout << "NOP\n";
                 numInstructions++;
                 break;
 
-            case 16: // LDR
+            case 0x10: // LDR
                 pc++;
                 addr = memory[pc];
                 ac = memory[addr];
@@ -48,7 +48,7 @@ int main()
                 numInstructions++;
                 break;
             
-            case 32: // STR
+            case 0x20: // STR
                 pc++;
                 addr = memory[pc];
                 memory[addr] = ac;
@@ -57,7 +57,7 @@ int main()
                 numInstructions++;
                 break;
             
-            case 48: // ADD
+            case 0x30: // ADD
                 pc++;
                 addr = memory[pc];
                 ac += memory[addr];
@@ -65,7 +65,7 @@ int main()
                 numInstructions++;
                 break;
             
-            case 64: // SUB
+            case 0x40: // SUB
                 pc++;
                 addr = memory[pc];
                 ac -= memory[addr];
@@ -73,7 +73,7 @@ int main()
                 numInstructions++;
                 break;
 
-            case 80: // MUL
+            case 0x50: // MUL
                 pc++;
                 addr = memory[pc];
                 ac *= memory[addr];
@@ -81,7 +81,7 @@ int main()
                 numInstructions++;
                 break;
             
-            case 96: // DIV
+            case 0x60: // DIV
                 pc++;
                 addr = memory[pc];
                 ac /= memory[addr];
@@ -89,13 +89,13 @@ int main()
                 numInstructions++;
                 break;
 
-            case 112: // NOT
+            case 0x70: // NOT
                 ac = ~ac;
                 cout << "NOT    ; AC <- !AC\n";
                 numInstructions++;
                 break;
             
-            case 128: // AND
+            case 0x80: // AND
                 pc++;
                 addr = memory[pc];
                 ac = ac & memory[addr];
@@ -103,7 +103,7 @@ int main()
                 numInstructions++;
                 break;
 
-            case 144: // OR
+            case 0x90: // OR
                 pc++;
                 addr = memory[pc];
                 ac = ac | memory[addr];
@@ -111,7 +111,7 @@ int main()
                 numInstructions++;
                 break;
             
-            case 160: // XOR
+            case 0xA0: // XOR
                 pc++;
                 addr = memory[pc];
                 ac = ac ^ memory[addr];
@@ -119,7 +119,7 @@ int main()
                 numInstructions++;
                 break;
             
-            case 176: // JMP
+            case 0xB0: // JMP
                 pc++;
                 addr = memory[pc];
                 pc = addr-1;
@@ -127,7 +127,7 @@ int main()
                 numInstructions++;
                 break;
 
-            case 192: // JEQ
+            case 0xC0: // JEQ
                 pc++;
                 addr = memory[pc];
                 if(ac == 0){
@@ -137,7 +137,7 @@ int main()
                 numInstructions++;
                 break;
 
-            case 208: // JG
+            case 0xD0: // JG
                 pc++;
                 addr = memory[pc];
                 if(ac > 0){
@@ -147,7 +147,7 @@ int main()
                 numInstructions++;
                 break;
 
-            case 224: // JL
+            case 0xE0: // JL
                 pc++;
                 addr = memory[pc];
                 if(ac < 0){
@@ -157,7 +157,7 @@ int main()
                 numInstructions++;
                 break;
 
-            case 240: // HLT
+            case 0xF0: // HLT
                 cout << "HLT\n";
                 numInstructions++;
                 hlt = true;
